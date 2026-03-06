@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,44 @@ import { DraftSummary } from "@/components/DraftSummary";
 import { ThemeDrilldown } from "@/components/ThemeDrilldown";
 import { mockFeedback, mockThemes, mockSummary } from "@/data/mockData";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
+import { Feedback } from "@/data/types";
 
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [supabaseFeedback, setSupabaseFeedback] = useState<Feedback[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const fetchFeedback = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setSupabaseFeedback(
+        data.map((row) => ({
+          id: row.id,
+          text: row.text,
+          source: row.source,
+          date: row.date,
+          sentiment: Number(row.sentiment) || 0,
+          themes: row.themes || [],
+        }))
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFeedback();
+  }, [fetchFeedback]);
+
+  // Merge Supabase feedback with mock data
+  const allFeedback = useMemo(
+    () => [...supabaseFeedback, ...mockFeedback],
+    [supabaseFeedback]
+  );
 
   // Auto-collapse left panel when a theme is selected
   useEffect(() => {
@@ -24,22 +58,28 @@ export default function Dashboard() {
       setLeftPanelOpen(true);
     }
   }, [activeTheme]);
-  const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
 
+  const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
   const highlightedFeedbackIds = selectedTheme?.feedbackIds || [];
 
   const overallSentiment = useMemo(() => {
-    const total = mockFeedback.reduce((sum, f) => sum + f.sentiment, 0);
-    return total / mockFeedback.length;
-  }, []);
+    if (!allFeedback.length) return 0;
+    const total = allFeedback.reduce((sum, f) => sum + f.sentiment, 0);
+    return total / allFeedback.length;
+  }, [allFeedback]);
 
   const sortedFeedback = useMemo(() => {
-    if (!highlightedFeedbackIds.length) return mockFeedback;
+    if (!highlightedFeedbackIds.length) return allFeedback;
     return [
-      ...mockFeedback.filter((f) => highlightedFeedbackIds.includes(f.id)),
-      ...mockFeedback.filter((f) => !highlightedFeedbackIds.includes(f.id)),
+      ...allFeedback.filter((f) => highlightedFeedbackIds.includes(f.id)),
+      ...allFeedback.filter((f) => !highlightedFeedbackIds.includes(f.id)),
     ];
-  }, [highlightedFeedbackIds]);
+  }, [highlightedFeedbackIds, allFeedback]);
+
+  const handleSubmitSuccess = useCallback(() => {
+    fetchFeedback();
+    setDialogOpen(false);
+  }, [fetchFeedback]);
 
   return (
     <div className="min-h-screen bg-background">
