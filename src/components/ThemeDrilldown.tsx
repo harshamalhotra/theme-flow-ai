@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus, FileOutput, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Theme, Feedback } from "@/data/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { DraftSummary } from "@/components/DraftSummary";
 
 interface ThemeDrilldownProps {
   theme: Theme;
@@ -35,10 +36,21 @@ function SentimentBar({ label, value, count }: { label: string; value: string; c
 }
 
 export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps) {
+  const [summaryOpen, setSummaryOpen] = useState(false);
+
   const relatedFeedback = useMemo(
     () => feedback.filter((f) => theme.feedbackIds.includes(f.id)),
     [theme, feedback]
   );
+
+  const themeSummary = useMemo(() => {
+    const quotes = relatedFeedback.map((f) => `"${f.text}"`).join("\n");
+    return `Theme: ${theme.label}\nConfidence: ${theme.confidence}%\nFeedback count: ${relatedFeedback.length}\n\nKey quotes:\n${quotes}${
+      theme.suggestedActions?.length
+        ? `\n\nSuggested actions:\n${theme.suggestedActions.map((a, i) => `${i + 1}. ${a}`).join("\n")}`
+        : ""
+    }`;
+  }, [theme, relatedFeedback]);
 
   const sentimentBreakdown = useMemo(() => {
     const pos = relatedFeedback.filter((f) => f.sentiment > 0.2).length;
@@ -200,6 +212,38 @@ export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps
                   </motion.div>
                 ))}
               </div>
+            </div>
+            {/* Draft Summary */}
+            <div>
+              <button
+                onClick={() => setSummaryOpen(!summaryOpen)}
+                className="flex items-center gap-2 mb-3 w-full group"
+              >
+                <FileOutput size={14} className="text-muted-foreground" />
+                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Draft Summary
+                </h3>
+                <ChevronDown
+                  size={14}
+                  className={cn(
+                    "ml-auto text-muted-foreground transition-transform duration-200",
+                    summaryOpen && "rotate-180"
+                  )}
+                />
+              </button>
+              <AnimatePresence>
+                {summaryOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <DraftSummary summary={themeSummary} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </ScrollArea>
