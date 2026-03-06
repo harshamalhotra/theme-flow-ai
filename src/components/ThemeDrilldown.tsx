@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus, FileOutput, ChevronDown } from "lucide-react";
+import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus, FileOutput, ChevronDown, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Theme, Feedback } from "@/data/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -92,6 +92,19 @@ export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps
             {theme.label}
           </h2>
           <button
+            onClick={() => setSummaryOpen(!summaryOpen)}
+            className={cn(
+              "h-7 px-2 rounded-md flex items-center gap-1.5 text-[10px] font-medium transition-colors",
+              summaryOpen
+                ? "bg-primary/10 text-primary"
+                : "hover:bg-muted text-muted-foreground"
+            )}
+            title="Draft Report"
+          >
+            <FileText size={12} />
+            Draft Report
+          </button>
+          <button
             onClick={onClose}
             className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-muted transition-colors"
           >
@@ -101,6 +114,27 @@ export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps
 
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-5">
+            {/* Draft Summary (collapsible, at top) */}
+            <AnimatePresence>
+              {summaryOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden rounded-lg border bg-accent/30 p-3"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <FileOutput size={14} className="text-muted-foreground" />
+                    <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Draft Summary
+                    </h3>
+                  </div>
+                  <DraftSummary summary={themeSummary} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Sentiment Breakdown */}
             <div>
               <div className="flex items-center gap-2 mb-3">
@@ -212,38 +246,6 @@ export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps
                   </motion.div>
                 ))}
               </div>
-            </div>
-            {/* Draft Summary */}
-            <div>
-              <button
-                onClick={() => setSummaryOpen(!summaryOpen)}
-                className="flex items-center gap-2 mb-3 w-full group"
-              >
-                <FileOutput size={14} className="text-muted-foreground" />
-                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Draft Summary
-                </h3>
-                <ChevronDown
-                  size={14}
-                  className={cn(
-                    "ml-auto text-muted-foreground transition-transform duration-200",
-                    summaryOpen && "rotate-180"
-                  )}
-                />
-              </button>
-              <AnimatePresence>
-                {summaryOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <DraftSummary summary={themeSummary} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           </div>
         </ScrollArea>
