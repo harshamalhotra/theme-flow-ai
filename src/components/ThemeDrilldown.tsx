@@ -92,6 +92,19 @@ export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps
             {theme.label}
           </h2>
           <button
+            onClick={() => setSummaryOpen(!summaryOpen)}
+            className={cn(
+              "h-7 px-2 rounded-md flex items-center gap-1.5 text-[10px] font-medium transition-colors",
+              summaryOpen
+                ? "bg-primary/10 text-primary"
+                : "hover:bg-muted text-muted-foreground"
+            )}
+            title="Draft Report"
+          >
+            <FileText size={12} />
+            Draft Report
+          </button>
+          <button
             onClick={onClose}
             className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-muted transition-colors"
           >
