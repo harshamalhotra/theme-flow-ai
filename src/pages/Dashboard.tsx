@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, MessageSquareText, Sparkles, FileOutput } from "lucide-react";
+import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentMeter } from "@/components/SentimentMeter";
@@ -11,7 +12,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
+  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
 
+  // Auto-collapse left panel when a theme is selected
+  useEffect(() => {
+    if (activeTheme) {
+      setLeftPanelOpen(false);
+    } else {
+      setLeftPanelOpen(true);
+    }
+  }, [activeTheme]);
   const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
 
   const highlightedFeedbackIds = selectedTheme?.feedbackIds || [];
@@ -56,47 +66,79 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-[1600px] mx-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-120px)]">
+        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-120px)] transition-all duration-500 ${
+          leftPanelOpen 
+            ? 'lg:grid-cols-12' 
+            : 'lg:grid-cols-[auto_1fr_auto]'
+        }`}>
           {/* Left Panel - Feedback Source */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-            className="lg:col-span-4 flex flex-col rounded-xl border bg-card overflow-hidden"
-          >
-            <div className="px-4 py-3 border-b flex items-center gap-2">
-              <MessageSquareText size={15} className="text-muted-foreground" />
-              <h2 className="text-sm font-medium text-foreground">
-                Raw Feedback
-              </h2>
-              <span className="ml-auto text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
-                {mockFeedback.length}
-              </span>
-            </div>
-            <ScrollArea className="h-[600px] p-3">
-              <div className="space-y-2.5">
-                {sortedFeedback.map((fb) => (
-                  <FeedbackCard
-                    key={fb.id}
-                    text={fb.text}
-                    source={fb.source}
-                    date={fb.date}
-                    sentiment={fb.sentiment}
-                    themes={fb.themes}
-                    isHighlighted={highlightedFeedbackIds.includes(fb.id)}
-                    highlightedTheme={selectedTheme?.label}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
-          </motion.div>
+          <AnimatePresence initial={false}>
+            {leftPanelOpen ? (
+              <motion.div
+                key="left-panel"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "auto", opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="lg:col-span-4 flex flex-col rounded-xl border bg-card overflow-hidden min-w-0"
+              >
+                <div className="px-4 py-3 border-b flex items-center gap-2">
+                  <MessageSquareText size={15} className="text-muted-foreground" />
+                  <h2 className="text-sm font-medium text-foreground">
+                    Raw Feedback
+                  </h2>
+                  <span className="ml-auto text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
+                    {mockFeedback.length}
+                  </span>
+                </div>
+                <ScrollArea className="h-[600px] p-3">
+                  <div className="space-y-2.5">
+                    {sortedFeedback.map((fb) => (
+                      <FeedbackCard
+                        key={fb.id}
+                        text={fb.text}
+                        source={fb.source}
+                        date={fb.date}
+                        sentiment={fb.sentiment}
+                        themes={fb.themes}
+                        isHighlighted={highlightedFeedbackIds.includes(fb.id)}
+                        highlightedTheme={selectedTheme?.label}
+                      />
+                    ))}
+                  </div>
+                </ScrollArea>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="left-panel-collapsed"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "auto", opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="flex flex-col items-center"
+              >
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setLeftPanelOpen(true)}
+                  className="h-9 w-9 rounded-xl border bg-card shadow-sm"
+                  title="Show Raw Feedback"
+                >
+                  <PanelLeftOpen size={16} className="text-muted-foreground" />
+                </Button>
+                <span className="text-[10px] text-muted-foreground mt-2 [writing-mode:vertical-lr] rotate-180 tracking-widest uppercase">
+                  Feedback
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Center Panel - AI Insights */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="lg:col-span-5 flex flex-col gap-6"
+            className={`flex flex-col gap-6 ${leftPanelOpen ? 'lg:col-span-5' : 'lg:col-span-1'}`}
           >
             {/* Top Themes */}
             <div className="rounded-xl border bg-card p-5">
