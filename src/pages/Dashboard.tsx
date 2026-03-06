@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus, BarChart3, TrendingUp, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
