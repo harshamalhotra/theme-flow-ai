@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
 import { FeedbackCard } from "@/components/FeedbackCard";
+import { FeedbackFilters } from "@/components/FeedbackFilters";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentSparkline } from "@/components/SentimentSparkline";
 import { DraftSummary } from "@/components/DraftSummary";
@@ -18,6 +19,7 @@ import { AnimatedCounter } from "@/components/AnimatedCounter";
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [filteredFeedback, setFilteredFeedback] = useState<Feedback[]>([]);
   const [supabaseFeedback, setSupabaseFeedback] = useState<Feedback[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -71,12 +73,13 @@ export default function Dashboard() {
 
   const sortedFeedback = useMemo(() => {
     if (!highlightedFeedbackIds.length) return allFeedback;
+    const base = filteredFeedback.length > 0 || allFeedback.length === 0 ? filteredFeedback : allFeedback;
+    if (!highlightedFeedbackIds.length) return base;
     return [
-      ...allFeedback.filter((f) => highlightedFeedbackIds.includes(f.id)),
-      ...allFeedback.filter((f) => !highlightedFeedbackIds.includes(f.id)),
+      ...base.filter((f) => highlightedFeedbackIds.includes(f.id)),
+      ...base.filter((f) => !highlightedFeedbackIds.includes(f.id)),
     ];
-  }, [highlightedFeedbackIds, allFeedback]);
-
+  }, [highlightedFeedbackIds, filteredFeedback, allFeedback]);
   const handleSubmitSuccess = useCallback(() => {
     fetchFeedback();
     setDialogOpen(false);
@@ -148,7 +151,10 @@ export default function Dashboard() {
                     {allFeedback.length}
                   </span>
                 </div>
-                <ScrollArea className="h-[600px] p-3">
+                <div className="px-3 pt-3">
+                  <FeedbackFilters feedback={allFeedback} onFilteredChange={setFilteredFeedback} />
+                </div>
+                <ScrollArea className="h-[520px] p-3">
                   <div className="space-y-2.5">
                     {sortedFeedback.map((fb) => (
                       <FeedbackCard
