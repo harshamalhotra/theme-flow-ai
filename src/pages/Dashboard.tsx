@@ -13,6 +13,7 @@ import { mockFeedback, mockThemes, mockSummary } from "@/data/mockData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { Feedback } from "@/data/types";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
