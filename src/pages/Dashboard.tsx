@@ -66,21 +66,27 @@ export default function Dashboard() {
   const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
   const highlightedFeedbackIds = selectedTheme?.feedbackIds || [];
 
+  // The active dataset is filteredFeedback once filters have initialized
+  const activeFeedback = hasInitFilters ? filteredFeedback : allFeedback;
+
+  const handleFilteredChange = useCallback((filtered: Feedback[]) => {
+    setFilteredFeedback(filtered);
+    if (!hasInitFilters) setHasInitFilters(true);
+  }, [hasInitFilters]);
+
   const overallSentiment = useMemo(() => {
-    if (!allFeedback.length) return 0;
-    const total = allFeedback.reduce((sum, f) => sum + f.sentiment, 0);
-    return total / allFeedback.length;
-  }, [allFeedback]);
+    if (!activeFeedback.length) return 0;
+    const total = activeFeedback.reduce((sum, f) => sum + f.sentiment, 0);
+    return total / activeFeedback.length;
+  }, [activeFeedback]);
 
   const sortedFeedback = useMemo(() => {
-    if (!highlightedFeedbackIds.length) return allFeedback;
-    const base = filteredFeedback.length > 0 || allFeedback.length === 0 ? filteredFeedback : allFeedback;
-    if (!highlightedFeedbackIds.length) return base;
+    if (!highlightedFeedbackIds.length) return activeFeedback;
     return [
-      ...base.filter((f) => highlightedFeedbackIds.includes(f.id)),
-      ...base.filter((f) => !highlightedFeedbackIds.includes(f.id)),
+      ...activeFeedback.filter((f) => highlightedFeedbackIds.includes(f.id)),
+      ...activeFeedback.filter((f) => !highlightedFeedbackIds.includes(f.id)),
     ];
-  }, [highlightedFeedbackIds, filteredFeedback, allFeedback]);
+  }, [highlightedFeedbackIds, activeFeedback]);
   const handleSubmitSuccess = useCallback(() => {
     fetchFeedback();
     setDialogOpen(false);
