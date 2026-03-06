@@ -1,7 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen } from "lucide-react";
+import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentMeter } from "@/components/SentimentMeter";
