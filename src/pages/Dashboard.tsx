@@ -35,6 +35,7 @@ export default function Dashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const fetchFeedback = useCallback(async () => {
+    setIsLoading(true);
     const { data, error } = await supabase
       .from("feedback")
       .select("*")
@@ -52,6 +53,7 @@ export default function Dashboard() {
         }))
       );
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
