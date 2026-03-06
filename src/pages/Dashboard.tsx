@@ -245,16 +245,16 @@ export default function Dashboard() {
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: "Themes Found", value: mockThemes.length.toString(), color: "primary" },
-                { label: "Avg. Confidence", value: `${Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length)}%`, color: "primary" },
-                { label: "Negative Signals", value: allFeedback.filter(f => f.sentiment < -0.2).length.toString(), color: "destructive" },
+                { label: "Themes Found", value: mockThemes.length, suffix: "" },
+                { label: "Avg. Confidence", value: Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length), suffix: "%" },
+                { label: "Negative Signals", value: allFeedback.filter(f => f.sentiment < -0.2).length, suffix: "" },
               ].map((stat) => (
                 <div
                   key={stat.label}
                   className="rounded-xl border bg-card p-4 text-center"
                 >
                   <p className="text-2xl font-semibold text-foreground">
-                    {stat.value}
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {stat.label}
