@@ -69,7 +69,7 @@ export default function Dashboard() {
         <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-120px)] transition-all duration-500 ${
           leftPanelOpen 
             ? 'lg:grid-cols-12' 
-            : 'lg:grid-cols-[auto_1fr_auto]'
+            : 'lg:grid-cols-[auto_1fr_minmax(400px,5fr)]'
         }`}>
           {/* Left Panel - Feedback Source */}
           <AnimatePresence initial={false}>
@@ -217,7 +217,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
-                className="lg:col-span-3 flex flex-col"
+                className={`flex flex-col ${leftPanelOpen ? 'lg:col-span-3' : ''}`}
               >
                 <ThemeDrilldown
                   theme={selectedTheme}
