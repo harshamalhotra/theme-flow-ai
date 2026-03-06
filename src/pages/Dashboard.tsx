@@ -18,6 +18,7 @@ import {
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentSparkline } from "@/components/SentimentSparkline";
 import { DraftSummary } from "@/components/DraftSummary";
+import { SourceBreakdown } from "@/components/SourceBreakdown";
 import { ThemeDrilldown } from "@/components/ThemeDrilldown";
 import { mockFeedback, mockThemes, mockSummary } from "@/data/mockData";
 import { ScrollArea } from "@/components/ui/scroll-area";
