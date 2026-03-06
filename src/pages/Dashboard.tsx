@@ -1,7 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen } from "lucide-react";
+import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentMeter } from "@/components/SentimentMeter";
@@ -57,7 +59,21 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="sm" className="gap-1.5 text-xs">
+                  <Plus size={14} />
+                  Add Feedback
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[480px]">
+                <DialogHeader>
+                  <DialogTitle>Submit Feedback</DialogTitle>
+                </DialogHeader>
+                <FeedbackSubmitForm />
+              </DialogContent>
+            </Dialog>
             <span className="h-2 w-2 rounded-full bg-sentiment-positive animate-pulse-glow" />
             <span>{mockFeedback.length} responses analyzed</span>
           </div>
