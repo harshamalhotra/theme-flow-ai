@@ -80,7 +80,7 @@ export default function Dashboard() {
                 animate={{ width: "auto", opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="lg:col-span-3 flex flex-col rounded-xl border bg-card overflow-hidden min-w-0"
+                className="flex flex-col rounded-xl border bg-card overflow-hidden min-w-0"
               >
                 <div className="px-4 py-3 border-b flex items-center gap-2">
                   <MessageSquareText size={15} className="text-muted-foreground" />
