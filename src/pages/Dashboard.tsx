@@ -138,7 +138,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="lg:col-span-5 flex flex-col gap-6"
+            className={`flex flex-col gap-6 ${leftPanelOpen ? 'lg:col-span-5' : 'lg:col-span-1'}`}
           >
             {/* Top Themes */}
             <div className="rounded-xl border bg-card p-5">
