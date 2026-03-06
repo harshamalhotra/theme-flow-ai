@@ -19,6 +19,7 @@ import { AnimatedCounter } from "@/components/AnimatedCounter";
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [filteredFeedback, setFilteredFeedback] = useState<Feedback[]>([]);
   const [supabaseFeedback, setSupabaseFeedback] = useState<Feedback[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
