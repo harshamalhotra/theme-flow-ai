@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus, FileOutput, ChevronDown } from "lucide-react";
+import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus, FileOutput, ChevronDown, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Theme, Feedback } from "@/data/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
