@@ -159,7 +159,7 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="px-3 pt-3">
-                  <FeedbackFilters feedback={allFeedback} onFilteredChange={setFilteredFeedback} />
+                  <FeedbackFilters feedback={allFeedback} onFilteredChange={handleFilteredChange} />
                 </div>
                 <ScrollArea className="h-[520px] p-3">
                   <div className="space-y-2.5">
