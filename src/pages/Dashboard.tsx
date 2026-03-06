@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
 import { FeedbackCard } from "@/components/FeedbackCard";
+import { FeedbackFilters } from "@/components/FeedbackFilters";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentSparkline } from "@/components/SentimentSparkline";
 import { DraftSummary } from "@/components/DraftSummary";
