@@ -68,8 +68,8 @@ export default function Dashboard() {
       <main className="max-w-[1600px] mx-auto p-6">
         <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-120px)] transition-all duration-500 ${
           leftPanelOpen 
-            ? 'lg:grid-cols-12' 
-            : 'lg:grid-cols-[auto_1fr_minmax(400px,5fr)]'
+            ? 'lg:grid-cols-[1fr_40%_1fr]' 
+            : 'lg:grid-cols-[auto_40%_1fr]'
         }`}>
           {/* Left Panel - Feedback Source */}
           <AnimatePresence initial={false}>
@@ -80,7 +80,7 @@ export default function Dashboard() {
                 animate={{ width: "auto", opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="lg:col-span-3 flex flex-col rounded-xl border bg-card overflow-hidden min-w-0"
+                className="flex flex-col rounded-xl border bg-card overflow-hidden min-w-0"
               >
                 <div className="px-4 py-3 border-b flex items-center gap-2">
                   <MessageSquareText size={15} className="text-muted-foreground" />
@@ -138,7 +138,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className={`flex flex-col gap-6 ${leftPanelOpen ? 'lg:col-span-6' : 'lg:col-span-1'}`}
+            className="flex flex-col gap-6"
           >
             {/* Top Themes */}
             <div className="rounded-xl border bg-card p-5">
@@ -217,7 +217,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
-                className={`flex flex-col ${leftPanelOpen ? 'lg:col-span-3' : ''}`}
+                className="flex flex-col"
               >
                 <ThemeDrilldown
                   theme={selectedTheme}
