@@ -234,12 +234,12 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Sentiment Meter */}
+            {/* Sentiment Sparkline */}
             <div className="rounded-xl border bg-card p-5">
               <h2 className="text-sm font-medium text-foreground mb-4">
-                Sentiment Pulse
+                Sentiment Trend
               </h2>
-              <SentimentMeter value={overallSentiment} />
+              <SentimentSparkline feedback={allFeedback} />
             </div>
 
             {/* Stats Row */}
