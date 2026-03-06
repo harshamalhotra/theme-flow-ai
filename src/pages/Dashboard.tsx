@@ -72,7 +72,7 @@ export default function Dashboard() {
                 {mockFeedback.length}
               </span>
             </div>
-            <ScrollArea className="flex-1 p-3">
+            <ScrollArea className="h-[600px] p-3">
               <div className="space-y-2.5">
                 {sortedFeedback.map((fb) => (
                   <FeedbackCard
