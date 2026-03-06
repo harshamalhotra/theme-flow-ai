@@ -4,6 +4,7 @@ import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus } from "lucide-rea
 import { cn } from "@/lib/utils";
 import { Theme, Feedback } from "@/data/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ThemeDrilldownProps {
   theme: Theme;
