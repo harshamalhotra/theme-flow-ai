@@ -247,7 +247,7 @@ export default function Dashboard() {
               {[
                 { label: "Themes Found", value: mockThemes.length.toString(), color: "primary" },
                 { label: "Avg. Confidence", value: `${Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length)}%`, color: "primary" },
-                { label: "Negative Signals", value: mockFeedback.filter(f => f.sentiment < -0.2).length.toString(), color: "destructive" },
+                { label: "Negative Signals", value: allFeedback.filter(f => f.sentiment < -0.2).length.toString(), color: "destructive" },
               ].map((stat) => (
                 <div
                   key={stat.label}
