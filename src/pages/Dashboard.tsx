@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Activity, MessageSquareText, Sparkles, FileOutput } from "lucide-react";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentMeter } from "@/components/SentimentMeter";
 import { DraftSummary } from "@/components/DraftSummary";
+import { ThemeDrilldown } from "@/components/ThemeDrilldown";
 import { mockFeedback, mockThemes, mockSummary } from "@/data/mockData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
