@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from "recharts";
 import { Feedback } from "@/data/types";
 import { TrendingUp, TrendingDown, Minus, Lightbulb } from "lucide-react";
-import { Feedback } from "@/data/types";
 
 interface SentimentSparklineProps {
   feedback: Feedback[];
