@@ -261,7 +261,7 @@ export default function Dashboard() {
               {[
                 { label: "Themes Found", value: mockThemes.length, suffix: "" },
                 { label: "Avg. Confidence", value: Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length), suffix: "%" },
-                { label: "Negative Signals", value: allFeedback.filter(f => f.sentiment < -0.2).length, suffix: "" },
+                { label: "Negative Signals", value: activeFeedback.filter(f => f.sentiment < -0.2).length, suffix: "" },
               ].map((stat) => (
                 <div
                   key={stat.label}
