@@ -75,6 +75,11 @@ export const mockThemes: Theme[] = [
     confidence: 94,
     sentiment: -0.5,
     feedbackIds: ["1", "4", "8"],
+    suggestedActions: [
+      "Add persistent breadcrumb navigation across all sections",
+      "Increase cart icon contrast and add a badge counter",
+      "Implement predictable back-button behavior with history stack",
+    ],
   },
   {
     id: "t2",
@@ -83,6 +88,11 @@ export const mockThemes: Theme[] = [
     confidence: 91,
     sentiment: -0.65,
     feedbackIds: ["2", "6"],
+    suggestedActions: [
+      "Show total cost breakdown before final checkout step",
+      "Add a comparison table on the pricing page",
+      "Disclose all service fees upfront on product pages",
+    ],
   },
   {
     id: "t3",
@@ -91,6 +101,10 @@ export const mockThemes: Theme[] = [
     confidence: 87,
     sentiment: -0.65,
     feedbackIds: ["2", "6"],
+    suggestedActions: [
+      "Add trust badges and transparent refund policy at checkout",
+      "Display user reviews and ratings prominently",
+    ],
   },
   {
     id: "t4",
@@ -99,6 +113,10 @@ export const mockThemes: Theme[] = [
     confidence: 89,
     sentiment: -0.45,
     feedbackIds: ["1", "8"],
+    suggestedActions: [
+      "Fix progress bar to reflect actual checkout steps",
+      "Add clear step labels (Shipping → Payment → Confirm)",
+    ],
   },
   {
     id: "t5",
@@ -107,6 +125,10 @@ export const mockThemes: Theme[] = [
     confidence: 82,
     sentiment: 0.6,
     feedbackIds: ["3"],
+    suggestedActions: [
+      "Add a 'Replay Tutorial' option in the help menu",
+      "Extend onboarding to cover advanced features",
+    ],
   },
   {
     id: "t6",
@@ -115,6 +137,10 @@ export const mockThemes: Theme[] = [
     confidence: 78,
     sentiment: 0.8,
     feedbackIds: ["5"],
+    suggestedActions: [
+      "Port mobile gesture patterns to desktop (keyboard shortcuts)",
+      "Maintain mobile-first performance optimizations",
+    ],
   },
 ];
 
