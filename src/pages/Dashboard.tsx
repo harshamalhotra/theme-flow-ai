@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus } from "lucide-react";
+import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
