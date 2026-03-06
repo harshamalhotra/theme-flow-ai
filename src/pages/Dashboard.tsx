@@ -73,12 +73,13 @@ export default function Dashboard() {
 
   const sortedFeedback = useMemo(() => {
     if (!highlightedFeedbackIds.length) return allFeedback;
+    const base = filteredFeedback.length > 0 || allFeedback.length === 0 ? filteredFeedback : allFeedback;
+    if (!highlightedFeedbackIds.length) return base;
     return [
-      ...allFeedback.filter((f) => highlightedFeedbackIds.includes(f.id)),
-      ...allFeedback.filter((f) => !highlightedFeedbackIds.includes(f.id)),
+      ...base.filter((f) => highlightedFeedbackIds.includes(f.id)),
+      ...base.filter((f) => !highlightedFeedbackIds.includes(f.id)),
     ];
-  }, [highlightedFeedbackIds, allFeedback]);
-
+  }, [highlightedFeedbackIds, filteredFeedback, allFeedback]);
   const handleSubmitSuccess = useCallback(() => {
     fetchFeedback();
     setDialogOpen(false);
