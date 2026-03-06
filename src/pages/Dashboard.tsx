@@ -17,6 +17,7 @@ import {
 } from "@/components/EmptyStates";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentSparkline } from "@/components/SentimentSparkline";
+import { SentimentHeatmap } from "@/components/SentimentHeatmap";
 import { DraftSummary } from "@/components/DraftSummary";
 import { SourceBreakdown } from "@/components/SourceBreakdown";
 import { ThemeDrilldown } from "@/components/ThemeDrilldown";
