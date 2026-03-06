@@ -58,10 +58,9 @@ export function FeedbackFilters({ feedback, onFilteredChange }: FeedbackFiltersP
     return result;
   }, [feedback, searchQuery, sourceFilter, sentimentRange]);
 
-  // Push filtered results up
-  useMemo(() => {
+  useEffect(() => {
     onFilteredChange(filtered);
-  }, [filtered, onFilteredChange]);
+  }, [filtered]);
 
   const clearFilters = () => {
     setSearchQuery("");
