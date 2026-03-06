@@ -144,7 +144,7 @@ export default function Dashboard() {
                     Raw Feedback
                   </h2>
                   <span className="ml-auto text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
-                    {mockFeedback.length}
+                    {allFeedback.length}
                   </span>
                 </div>
                 <ScrollArea className="h-[600px] p-3">
