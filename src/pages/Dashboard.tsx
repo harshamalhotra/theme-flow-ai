@@ -6,6 +6,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { FeedbackFilters } from "@/components/FeedbackFilters";
+import {
+  FeedbackListSkeleton,
+  ThemePillSkeleton,
+  SparklineSkeleton,
+  StatCardSkeleton,
+  NoFeedbackEmpty,
+  NoResultsEmpty,
+  NoChartDataEmpty,
+} from "@/components/EmptyStates";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentSparkline } from "@/components/SentimentSparkline";
 import { DraftSummary } from "@/components/DraftSummary";
@@ -22,9 +31,11 @@ export default function Dashboard() {
   const [filteredFeedback, setFilteredFeedback] = useState<Feedback[]>([]);
   const [hasInitFilters, setHasInitFilters] = useState(false);
   const [supabaseFeedback, setSupabaseFeedback] = useState<Feedback[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const fetchFeedback = useCallback(async () => {
+    setIsLoading(true);
     const { data, error } = await supabase
       .from("feedback")
       .select("*")
@@ -42,6 +53,7 @@ export default function Dashboard() {
         }))
       );
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -162,20 +174,26 @@ export default function Dashboard() {
                   <FeedbackFilters feedback={allFeedback} onFilteredChange={handleFilteredChange} />
                 </div>
                 <ScrollArea className="h-[520px] p-3">
-                  <div className="space-y-2.5">
-                    {sortedFeedback.map((fb) => (
-                      <FeedbackCard
-                        key={fb.id}
-                        text={fb.text}
-                        source={fb.source}
-                        date={fb.date}
-                        sentiment={fb.sentiment}
-                        themes={fb.themes}
-                        isHighlighted={highlightedFeedbackIds.includes(fb.id)}
-                        highlightedTheme={selectedTheme?.label}
-                      />
-                    ))}
-                  </div>
+                  {isLoading ? (
+                    <FeedbackListSkeleton />
+                  ) : sortedFeedback.length === 0 ? (
+                    hasInitFilters ? <NoResultsEmpty /> : <NoFeedbackEmpty />
+                  ) : (
+                    <div className="space-y-2.5">
+                      {sortedFeedback.map((fb) => (
+                        <FeedbackCard
+                          key={fb.id}
+                          text={fb.text}
+                          source={fb.source}
+                          date={fb.date}
+                          sentiment={fb.sentiment}
+                          themes={fb.themes}
+                          isHighlighted={highlightedFeedbackIds.includes(fb.id)}
+                          highlightedTheme={selectedTheme?.label}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </ScrollArea>
               </motion.div>
             ) : (
@@ -253,28 +271,44 @@ export default function Dashboard() {
               <h2 className="text-sm font-medium text-foreground mb-4">
                 Sentiment Trend
               </h2>
-              <SentimentSparkline feedback={activeFeedback} />
+              {isLoading ? (
+                <SparklineSkeleton />
+              ) : activeFeedback.length === 0 ? (
+                <NoChartDataEmpty />
+              ) : (
+                <SentimentSparkline feedback={activeFeedback} />
+              )}
             </div>
 
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: "Themes Found", value: mockThemes.length, suffix: "" },
-                { label: "Avg. Confidence", value: Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length), suffix: "%" },
-                { label: "Negative Signals", value: activeFeedback.filter(f => f.sentiment < -0.2).length, suffix: "" },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-xl border bg-card p-4 text-center"
-                >
-                  <p className="text-2xl font-semibold text-foreground">
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
+              {isLoading ? (
+                <>
+                  <StatCardSkeleton />
+                  <StatCardSkeleton />
+                  <StatCardSkeleton />
+                </>
+              ) : (
+                [{
+                  label: "Themes Found", value: mockThemes.length, suffix: "",
+                }, {
+                  label: "Avg. Confidence", value: Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length), suffix: "%",
+                }, {
+                  label: "Negative Signals", value: activeFeedback.filter(f => f.sentiment < -0.2).length, suffix: "",
+                }].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-xl border bg-card p-4 text-center"
+                  >
+                    <p className="text-2xl font-semibold text-foreground">
+                      <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))
+              )}
             </div>
           </motion.div>
 
