@@ -36,10 +36,21 @@ function SentimentBar({ label, value, count }: { label: string; value: string; c
 }
 
 export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps) {
+  const [summaryOpen, setSummaryOpen] = useState(false);
+
   const relatedFeedback = useMemo(
     () => feedback.filter((f) => theme.feedbackIds.includes(f.id)),
     [theme, feedback]
   );
+
+  const themeSummary = useMemo(() => {
+    const quotes = relatedFeedback.map((f) => `"${f.text}"`).join("\n");
+    return `Theme: ${theme.label}\nConfidence: ${theme.confidence}%\nFeedback count: ${relatedFeedback.length}\n\nKey quotes:\n${quotes}${
+      theme.suggestedActions?.length
+        ? `\n\nSuggested actions:\n${theme.suggestedActions.map((a, i) => `${i + 1}. ${a}`).join("\n")}`
+        : ""
+    }`;
+  }, [theme, relatedFeedback]);
 
   const sentimentBreakdown = useMemo(() => {
     const pos = relatedFeedback.filter((f) => f.sentiment > 0.2).length;
