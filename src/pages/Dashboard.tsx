@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [supabaseFeedback, setSupabaseFeedback] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [activeSourceFilter, setActiveSourceFilter] = useState<string | null>(null);
 
   const fetchFeedback = useCallback(async () => {
     setIsLoading(true);
