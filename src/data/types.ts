@@ -14,4 +14,5 @@ export interface Theme {
   confidence: number; // 0-100
   sentiment: number; // -1 to 1
   feedbackIds: string[];
+  suggestedActions?: string[];
 }

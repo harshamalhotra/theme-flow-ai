@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Activity, MessageSquareText, Sparkles, FileOutput } from "lucide-react";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentMeter } from "@/components/SentimentMeter";
 import { DraftSummary } from "@/components/DraftSummary";
+import { ThemeDrilldown } from "@/components/ThemeDrilldown";
 import { mockFeedback, mockThemes, mockSummary } from "@/data/mockData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -165,23 +166,44 @@ export default function Dashboard() {
             </div>
           </motion.div>
 
-          {/* Right Panel - Draft Summary */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="lg:col-span-3 rounded-xl border bg-card overflow-hidden flex flex-col"
-          >
-            <div className="px-4 py-3 border-b flex items-center gap-2">
-              <FileOutput size={15} className="text-muted-foreground" />
-              <h2 className="text-sm font-medium text-foreground">
-                Draft Summary
-              </h2>
-            </div>
-            <div className="flex-1 p-4">
-              <DraftSummary summary={mockSummary} />
-            </div>
-          </motion.div>
+          {/* Right Panel - Drill-down or Draft Summary */}
+          <AnimatePresence mode="wait">
+            {selectedTheme ? (
+              <motion.div
+                key="drilldown"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="lg:col-span-3 flex flex-col"
+              >
+                <ThemeDrilldown
+                  theme={selectedTheme}
+                  feedback={mockFeedback}
+                  onClose={() => setActiveTheme(null)}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="summary"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="lg:col-span-3 rounded-xl border bg-card overflow-hidden flex flex-col"
+              >
+                <div className="px-4 py-3 border-b flex items-center gap-2">
+                  <FileOutput size={15} className="text-muted-foreground" />
+                  <h2 className="text-sm font-medium text-foreground">
+                    Draft Summary
+                  </h2>
+                </div>
+                <div className="flex-1 p-4">
+                  <DraftSummary summary={mockSummary} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </main>
     </div>
