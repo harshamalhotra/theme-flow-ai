@@ -68,8 +68,8 @@ export default function Dashboard() {
       <main className="max-w-[1600px] mx-auto p-6">
         <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-120px)] transition-all duration-500 ${
           leftPanelOpen 
-            ? 'lg:grid-cols-12' 
-            : 'lg:grid-cols-[auto_1fr_minmax(400px,5fr)]'
+            ? 'lg:grid-cols-[1fr_40%_1fr]' 
+            : 'lg:grid-cols-[auto_40%_1fr]'
         }`}>
           {/* Left Panel - Feedback Source */}
           <AnimatePresence initial={false}>
