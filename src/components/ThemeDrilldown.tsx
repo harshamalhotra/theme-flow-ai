@@ -4,6 +4,7 @@ import { X, Quote, Lightbulb, TrendingDown, TrendingUp, Minus } from "lucide-rea
 import { cn } from "@/lib/utils";
 import { Theme, Feedback } from "@/data/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ThemeDrilldownProps {
   theme: Theme;
@@ -176,18 +177,25 @@ export function ThemeDrilldown({ theme, feedback, onClose }: ThemeDrilldownProps
                     </p>
                     <div className="mt-2 flex items-center justify-between">
                       <span className="text-[10px] text-muted-foreground">{fb.source}</span>
-                      <span
-                        className={cn(
-                          "text-[10px] font-medium px-1.5 py-0.5 rounded",
-                          fb.sentiment > 0.2
-                            ? "bg-sentiment-positive/15 text-sentiment-positive"
-                            : fb.sentiment < -0.2
-                            ? "bg-sentiment-negative/15 text-sentiment-negative"
-                            : "bg-sentiment-neutral/15 text-sentiment-neutral"
-                        )}
-                      >
-                        {fb.sentiment > 0 ? "+" : ""}{(fb.sentiment * 100).toFixed(0)}
-                      </span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span
+                            className={cn(
+                              "text-[10px] font-medium px-1.5 py-0.5 rounded cursor-help",
+                              fb.sentiment > 0.2
+                                ? "bg-sentiment-positive/15 text-sentiment-positive"
+                                : fb.sentiment < -0.2
+                                ? "bg-sentiment-negative/15 text-sentiment-negative"
+                                : "bg-sentiment-neutral/15 text-sentiment-neutral"
+                            )}
+                          >
+                            Sentiment: {fb.sentiment > 0 ? "+" : ""}{(fb.sentiment * 100).toFixed(0)}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs max-w-[200px]">
+                          Sentiment score from <span className="font-semibold">-100</span> (very negative) to <span className="font-semibold">+100</span> (very positive)
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </motion.div>
                 ))}
