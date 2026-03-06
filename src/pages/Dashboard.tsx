@@ -316,6 +316,26 @@ export default function Dashboard() {
                 ))
               )}
             </div>
+
+            {/* Source Channel Breakdown */}
+            <div className="rounded-xl border bg-card p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 size={15} className="text-muted-foreground" />
+                <h2 className="text-sm font-medium text-foreground">
+                  Source Channels
+                </h2>
+                {activeSourceFilter && (
+                  <span className="ml-auto text-[10px] text-primary bg-accent px-2 py-0.5 rounded-md">
+                    Filtered
+                  </span>
+                )}
+              </div>
+              <SourceBreakdown
+                feedback={baseFeedback}
+                onSourceFilter={setActiveSourceFilter}
+                activeSource={activeSourceFilter}
+              />
+            </div>
           </motion.div>
 
           {/* Right Panel - Drill-down or Draft Summary */}
