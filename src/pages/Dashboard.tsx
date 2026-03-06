@@ -126,7 +126,7 @@ export default function Dashboard() {
               </DialogContent>
             </Dialog>
             <span className="h-2 w-2 rounded-full bg-sentiment-positive animate-pulse-glow" />
-            <span>{allFeedback.length} responses analyzed</span>
+            <span>{activeFeedback.length} responses analyzed</span>
           </div>
         </div>
       </header>
