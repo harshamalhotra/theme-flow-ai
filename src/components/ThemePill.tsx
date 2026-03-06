@@ -47,16 +47,23 @@ export function ThemePill({
         )}
       />
       <span>{label}</span>
-      <span
-        className={cn(
-          "text-xs px-1.5 py-0.5 rounded-md",
-          isActive
-            ? "bg-primary-foreground/20 text-primary-foreground"
-            : "bg-background text-muted-foreground"
-        )}
-      >
-        {count}
-      </span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span
+            className={cn(
+              "text-xs px-1.5 py-0.5 rounded-md cursor-help",
+              isActive
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background text-muted-foreground"
+            )}
+          >
+            {count} mentions
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="text-xs">
+          This theme was found in <span className="font-semibold">{count}</span> feedback {count !== 1 ? "entries" : "entry"}
+        </TooltipContent>
+      </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
           <span className="ml-0.5 cursor-help">
