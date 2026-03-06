@@ -273,19 +273,8 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Sentiment Sparkline */}
-            <div className="rounded-xl border bg-card p-5">
-              <h2 className="text-sm font-medium text-foreground mb-4">
-                Sentiment Trend
-              </h2>
-              {isLoading ? (
-                <SparklineSkeleton />
-              ) : activeFeedback.length === 0 ? (
-                <NoChartDataEmpty />
-              ) : (
-                <SentimentSparkline feedback={activeFeedback} />
-              )}
-            </div>
+            {/* Sentiment Trend — Sparkline + Heatmap toggle */}
+            <SentimentTrendPanel isLoading={isLoading} feedback={activeFeedback} />
 
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-3">
