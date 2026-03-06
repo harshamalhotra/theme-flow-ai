@@ -12,7 +12,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
+  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
 
+  // Auto-collapse left panel when a theme is selected
+  useEffect(() => {
+    if (activeTheme) {
+      setLeftPanelOpen(false);
+    } else {
+      setLeftPanelOpen(true);
+    }
+  }, [activeTheme]);
   const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
 
   const highlightedFeedbackIds = selectedTheme?.feedbackIds || [];
