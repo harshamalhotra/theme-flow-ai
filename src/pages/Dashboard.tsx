@@ -253,7 +253,7 @@ export default function Dashboard() {
               <h2 className="text-sm font-medium text-foreground mb-4">
                 Sentiment Trend
               </h2>
-              <SentimentSparkline feedback={allFeedback} />
+              <SentimentSparkline feedback={activeFeedback} />
             </div>
 
             {/* Stats Row */}
