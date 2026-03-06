@@ -174,20 +174,26 @@ export default function Dashboard() {
                   <FeedbackFilters feedback={allFeedback} onFilteredChange={handleFilteredChange} />
                 </div>
                 <ScrollArea className="h-[520px] p-3">
-                  <div className="space-y-2.5">
-                    {sortedFeedback.map((fb) => (
-                      <FeedbackCard
-                        key={fb.id}
-                        text={fb.text}
-                        source={fb.source}
-                        date={fb.date}
-                        sentiment={fb.sentiment}
-                        themes={fb.themes}
-                        isHighlighted={highlightedFeedbackIds.includes(fb.id)}
-                        highlightedTheme={selectedTheme?.label}
-                      />
-                    ))}
-                  </div>
+                  {isLoading ? (
+                    <FeedbackListSkeleton />
+                  ) : sortedFeedback.length === 0 ? (
+                    hasInitFilters ? <NoResultsEmpty /> : <NoFeedbackEmpty />
+                  ) : (
+                    <div className="space-y-2.5">
+                      {sortedFeedback.map((fb) => (
+                        <FeedbackCard
+                          key={fb.id}
+                          text={fb.text}
+                          source={fb.source}
+                          date={fb.date}
+                          sentiment={fb.sentiment}
+                          themes={fb.themes}
+                          isHighlighted={highlightedFeedbackIds.includes(fb.id)}
+                          highlightedTheme={selectedTheme?.label}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </ScrollArea>
               </motion.div>
             ) : (
