@@ -1,0 +1,121 @@
+import { Feedback, Theme } from "./types";
+
+export const mockFeedback: Feedback[] = [
+  {
+    id: "1",
+    text: "The checkout process was incredibly confusing. I couldn't figure out where to enter my shipping address and the progress bar didn't seem to work at all.",
+    source: "User Interview #14",
+    date: "2026-02-28",
+    sentiment: -0.7,
+    themes: ["Navigation Friction", "Checkout Flow"],
+  },
+  {
+    id: "2",
+    text: "I love the product quality but the pricing page makes it impossible to compare plans. Hidden fees appeared at the final step which felt dishonest.",
+    source: "Survey Response",
+    date: "2026-03-01",
+    sentiment: -0.4,
+    themes: ["Price Transparency", "Trust Issues"],
+  },
+  {
+    id: "3",
+    text: "The onboarding tutorial was great! Really helped me understand the core features. Wish there was a way to revisit it later though.",
+    source: "User Interview #17",
+    date: "2026-03-02",
+    sentiment: 0.6,
+    themes: ["Onboarding Quality"],
+  },
+  {
+    id: "4",
+    text: "Navigation between sections is clunky. I keep getting lost and the back button doesn't always take me where I expect.",
+    source: "Usability Test",
+    date: "2026-03-01",
+    sentiment: -0.6,
+    themes: ["Navigation Friction"],
+  },
+  {
+    id: "5",
+    text: "The mobile experience is surprisingly good. Everything loads fast and the gestures feel natural. Desktop could learn from mobile.",
+    source: "Survey Response",
+    date: "2026-03-03",
+    sentiment: 0.8,
+    themes: ["Mobile Experience"],
+  },
+  {
+    id: "6",
+    text: "I was charged more than the listed price. When I checked, there were additional service fees that weren't mentioned anywhere on the pricing page.",
+    source: "Support Ticket",
+    date: "2026-02-27",
+    sentiment: -0.9,
+    themes: ["Price Transparency", "Trust Issues"],
+  },
+  {
+    id: "7",
+    text: "Wish the search feature was smarter. I typed in keywords but got completely irrelevant results. Had to browse manually to find what I needed.",
+    source: "User Interview #21",
+    date: "2026-03-04",
+    sentiment: -0.3,
+    themes: ["Search Quality"],
+  },
+  {
+    id: "8",
+    text: "The checkout was smooth once I found it, but it took me three attempts to locate the cart icon. It blends into the header too much.",
+    source: "Usability Test",
+    date: "2026-03-03",
+    sentiment: -0.2,
+    themes: ["Navigation Friction", "Checkout Flow"],
+  },
+];
+
+export const mockThemes: Theme[] = [
+  {
+    id: "t1",
+    label: "Navigation Friction",
+    count: 3,
+    confidence: 94,
+    sentiment: -0.5,
+    feedbackIds: ["1", "4", "8"],
+  },
+  {
+    id: "t2",
+    label: "Price Transparency",
+    count: 2,
+    confidence: 91,
+    sentiment: -0.65,
+    feedbackIds: ["2", "6"],
+  },
+  {
+    id: "t3",
+    label: "Trust Issues",
+    count: 2,
+    confidence: 87,
+    sentiment: -0.65,
+    feedbackIds: ["2", "6"],
+  },
+  {
+    id: "t4",
+    label: "Checkout Flow",
+    count: 2,
+    confidence: 89,
+    sentiment: -0.45,
+    feedbackIds: ["1", "8"],
+  },
+  {
+    id: "t5",
+    label: "Onboarding Quality",
+    count: 1,
+    confidence: 82,
+    sentiment: 0.6,
+    feedbackIds: ["3"],
+  },
+  {
+    id: "t6",
+    label: "Mobile Experience",
+    count: 1,
+    confidence: 78,
+    sentiment: 0.8,
+    feedbackIds: ["5"],
+  },
+];
+
+export const mockSummary = `Users consistently report friction in navigation and checkout flows, with 3 out of 8 respondents citing difficulty finding key interface elements. Price transparency is a critical trust issue — hidden fees at checkout are eroding confidence.\n\nPositive signals exist around mobile UX and onboarding quality, suggesting strong foundational design that needs extension to desktop and post-onboarding experiences.`;
