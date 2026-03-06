@@ -80,8 +80,12 @@ export default function Dashboard() {
   const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
   const highlightedFeedbackIds = selectedTheme?.feedbackIds || [];
 
-  // The active dataset is filteredFeedback once filters have initialized
-  const activeFeedback = hasInitFilters ? filteredFeedback : allFeedback;
+  // The active dataset is filteredFeedback once filters have initialized, plus source filter
+  const baseFeedback = hasInitFilters ? filteredFeedback : allFeedback;
+  const activeFeedback = useMemo(() => {
+    if (!activeSourceFilter) return baseFeedback;
+    return baseFeedback.filter((f) => f.source.replace(/ #\d+$/, "") === activeSourceFilter);
+  }, [baseFeedback, activeSourceFilter]);
 
   const handleFilteredChange = useCallback((filtered: Feedback[]) => {
     setFilteredFeedback(filtered);
