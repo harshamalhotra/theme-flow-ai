@@ -59,7 +59,21 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="sm" className="gap-1.5 text-xs">
+                  <Plus size={14} />
+                  Add Feedback
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[480px]">
+                <DialogHeader>
+                  <DialogTitle>Submit Feedback</DialogTitle>
+                </DialogHeader>
+                <FeedbackSubmitForm />
+              </DialogContent>
+            </Dialog>
             <span className="h-2 w-2 rounded-full bg-sentiment-positive animate-pulse-glow" />
             <span>{mockFeedback.length} responses analyzed</span>
           </div>
