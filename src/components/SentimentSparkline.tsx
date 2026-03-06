@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from "recharts";
 import { Feedback } from "@/data/types";
+import { TrendingUp, TrendingDown, Minus, Lightbulb } from "lucide-react";
 
 interface SentimentSparklineProps {
   feedback: Feedback[];
@@ -35,6 +36,53 @@ export function SentimentSparkline({ feedback }: SentimentSparklineProps) {
   const trend = chartData.length >= 2
     ? chartData[chartData.length - 1].sentiment - chartData[chartData.length - 2].sentiment
     : 0;
+
+  // Compute overall trend across all days
+  const overallTrend = chartData.length >= 2
+    ? chartData[chartData.length - 1].sentiment - chartData[0].sentiment
+    : 0;
+
+  const volatility = useMemo(() => {
+    if (chartData.length < 2) return 0;
+    let swings = 0;
+    for (let i = 1; i < chartData.length; i++) {
+      swings += Math.abs(chartData[i].sentiment - chartData[i - 1].sentiment);
+    }
+    return Math.round(swings / (chartData.length - 1));
+  }, [chartData]);
+
+  const trendSummary = useMemo(() => {
+    if (chartData.length < 2) return { text: "Not enough data to determine trend.", reasons: [] };
+
+    const isImproving = overallTrend > 5;
+    const isDeclining = overallTrend < -5;
+    const isVolatile = volatility > 20;
+    const mostNegDay = chartData.reduce((min, d) => d.sentiment < min.sentiment ? d : min, chartData[0]);
+    const mostPosDay = chartData.reduce((max, d) => d.sentiment > max.sentiment ? d : max, chartData[0]);
+
+    let text = "";
+    const reasons: string[] = [];
+
+    if (isImproving) {
+      text = `Sentiment improved by ${overallTrend} pts over ${chartData.length} days, ending at ${currentSentiment > 0 ? "+" : ""}${currentSentiment}.`;
+      reasons.push("Recent feedback may reflect improvements in product experience or resolved pain points.");
+      if (isVolatile) reasons.push("High day-to-day swings suggest mixed reactions — some users are happy while others still face issues.");
+    } else if (isDeclining) {
+      text = `Sentiment dropped by ${Math.abs(overallTrend)} pts over ${chartData.length} days, ending at ${currentSentiment > 0 ? "+" : ""}${currentSentiment}.`;
+      reasons.push("Increasing negative feedback could indicate a regression, confusing UX change, or unmet expectations.");
+      if (mostNegDay.count > 1) reasons.push(`Worst day (${mostNegDay.date.split("-").slice(1).join("/")}) had ${mostNegDay.count} responses — possible incident or release impact.`);
+    } else {
+      text = `Sentiment is relatively stable around ${currentSentiment > 0 ? "+" : ""}${currentSentiment} over ${chartData.length} days.`;
+      reasons.push("Consistent sentiment suggests no major changes in user perception.");
+      if (isVolatile) reasons.push("Despite stability overall, daily fluctuations suggest polarized feedback from different user segments.");
+    }
+
+    if (mostPosDay.sentiment > 30 && mostNegDay.sentiment < -30) {
+      reasons.push("Wide sentiment range across days may indicate feature-specific reactions worth investigating per theme.");
+    }
+
+    return { text, reasons };
+  }, [chartData, overallTrend, volatility, currentSentiment]);
 
   return (
     <div className="space-y-3">
@@ -139,6 +187,35 @@ export function SentimentSparkline({ feedback }: SentimentSparklineProps) {
             : "Neutral"}
         </span>
       </div>
+
+      {/* Trend Summary */}
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mt-1 rounded-lg border bg-muted/30 p-3 space-y-2"
+      >
+        <div className="flex items-start gap-2">
+          {overallTrend > 5 ? (
+            <TrendingUp size={14} className="text-sentiment-positive mt-0.5 shrink-0" />
+          ) : overallTrend < -5 ? (
+            <TrendingDown size={14} className="text-sentiment-negative mt-0.5 shrink-0" />
+          ) : (
+            <Minus size={14} className="text-sentiment-neutral mt-0.5 shrink-0" />
+          )}
+          <p className="text-xs text-foreground leading-relaxed">{trendSummary.text}</p>
+        </div>
+        {trendSummary.reasons.length > 0 && (
+          <div className="space-y-1.5 pl-1">
+            {trendSummary.reasons.map((reason, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <Lightbulb size={11} className="text-primary mt-0.5 shrink-0" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{reason}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
