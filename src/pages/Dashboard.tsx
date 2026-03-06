@@ -27,6 +27,61 @@ import { supabase } from "@/integrations/supabase/client";
 import { Feedback } from "@/data/types";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 
+function SentimentTrendPanel({ isLoading, feedback }: { isLoading: boolean; feedback: Feedback[] }) {
+  const [view, setView] = useState<"sparkline" | "heatmap">("heatmap");
+
+  return (
+    <div className="rounded-xl border bg-card p-5">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-medium text-foreground">Sentiment Trend</h2>
+        <div className="flex items-center rounded-lg border bg-muted/50 p-0.5">
+          <button
+            onClick={() => setView("sparkline")}
+            className={cn(
+              "flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all",
+              view === "sparkline"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <TrendingUp size={11} />
+            Line
+          </button>
+          <button
+            onClick={() => setView("heatmap")}
+            className={cn(
+              "flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all",
+              view === "heatmap"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <CalendarDays size={11} />
+            Heatmap
+          </button>
+        </div>
+      </div>
+      {isLoading ? (
+        <SparklineSkeleton />
+      ) : feedback.length === 0 ? (
+        <NoChartDataEmpty />
+      ) : (
+        <AnimatePresence mode="wait">
+          {view === "sparkline" ? (
+            <motion.div key="sparkline" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              <SentimentSparkline feedback={feedback} />
+            </motion.div>
+          ) : (
+            <motion.div key="heatmap" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              <SentimentHeatmap feedback={feedback} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
