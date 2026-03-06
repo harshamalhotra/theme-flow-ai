@@ -187,6 +187,35 @@ export function SentimentSparkline({ feedback }: SentimentSparklineProps) {
             : "Neutral"}
         </span>
       </div>
+
+      {/* Trend Summary */}
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mt-1 rounded-lg border bg-muted/30 p-3 space-y-2"
+      >
+        <div className="flex items-start gap-2">
+          {overallTrend > 5 ? (
+            <TrendingUp size={14} className="text-sentiment-positive mt-0.5 shrink-0" />
+          ) : overallTrend < -5 ? (
+            <TrendingDown size={14} className="text-sentiment-negative mt-0.5 shrink-0" />
+          ) : (
+            <Minus size={14} className="text-sentiment-neutral mt-0.5 shrink-0" />
+          )}
+          <p className="text-xs text-foreground leading-relaxed">{trendSummary.text}</p>
+        </div>
+        {trendSummary.reasons.length > 0 && (
+          <div className="space-y-1.5 pl-1">
+            {trendSummary.reasons.map((reason, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <Lightbulb size={11} className="text-primary mt-0.5 shrink-0" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{reason}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
