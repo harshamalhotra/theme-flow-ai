@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, MessageSquareText, Sparkles, FileOutput } from "lucide-react";
+import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { FeedbackCard } from "@/components/FeedbackCard";
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentMeter } from "@/components/SentimentMeter";
