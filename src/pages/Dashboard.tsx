@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus } from "lucide-react";
+import { Activity, MessageSquareText, Sparkles, FileOutput, PanelLeftOpen, Plus, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FeedbackSubmitForm } from "@/components/FeedbackSubmitForm";
@@ -18,6 +18,7 @@ import {
 import { ThemePill } from "@/components/ThemePill";
 import { SentimentSparkline } from "@/components/SentimentSparkline";
 import { DraftSummary } from "@/components/DraftSummary";
+import { SourceBreakdown } from "@/components/SourceBreakdown";
 import { ThemeDrilldown } from "@/components/ThemeDrilldown";
 import { mockFeedback, mockThemes, mockSummary } from "@/data/mockData";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -33,6 +34,7 @@ export default function Dashboard() {
   const [supabaseFeedback, setSupabaseFeedback] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [activeSourceFilter, setActiveSourceFilter] = useState<string | null>(null);
 
   const fetchFeedback = useCallback(async () => {
     setIsLoading(true);
@@ -78,8 +80,12 @@ export default function Dashboard() {
   const selectedTheme = mockThemes.find((t) => t.id === activeTheme);
   const highlightedFeedbackIds = selectedTheme?.feedbackIds || [];
 
-  // The active dataset is filteredFeedback once filters have initialized
-  const activeFeedback = hasInitFilters ? filteredFeedback : allFeedback;
+  // The active dataset is filteredFeedback once filters have initialized, plus source filter
+  const baseFeedback = hasInitFilters ? filteredFeedback : allFeedback;
+  const activeFeedback = useMemo(() => {
+    if (!activeSourceFilter) return baseFeedback;
+    return baseFeedback.filter((f) => f.source.replace(/ #\d+$/, "") === activeSourceFilter);
+  }, [baseFeedback, activeSourceFilter]);
 
   const handleFilteredChange = useCallback((filtered: Feedback[]) => {
     setFilteredFeedback(filtered);
@@ -309,6 +315,26 @@ export default function Dashboard() {
                   </div>
                 ))
               )}
+            </div>
+
+            {/* Source Channel Breakdown */}
+            <div className="rounded-xl border bg-card p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 size={15} className="text-muted-foreground" />
+                <h2 className="text-sm font-medium text-foreground">
+                  Source Channels
+                </h2>
+                {activeSourceFilter && (
+                  <span className="ml-auto text-[10px] text-primary bg-accent px-2 py-0.5 rounded-md">
+                    Filtered
+                  </span>
+                )}
+              </div>
+              <SourceBreakdown
+                feedback={baseFeedback}
+                onSourceFilter={setActiveSourceFilter}
+                activeSource={activeSourceFilter}
+              />
             </div>
           </motion.div>
 
