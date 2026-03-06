@@ -217,7 +217,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
-                className="lg:col-span-3 flex flex-col"
+                className={`flex flex-col ${leftPanelOpen ? 'lg:col-span-3' : ''}`}
               >
                 <ThemeDrilldown
                   theme={selectedTheme}
