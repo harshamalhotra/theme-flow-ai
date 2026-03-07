@@ -172,7 +172,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card px-6 py-4">
-        <div className="flex items-center justify-between max-w-[1600px] mx-auto">
+        <div className="flex items-center justify-between max-w-layout mx-auto">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <Activity size={16} className="text-primary-foreground" />
@@ -208,12 +208,11 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto p-6">
-        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-120px)] transition-all duration-500 ${
-          leftPanelOpen 
-            ? 'lg:grid-cols-[1fr_40%_1fr]' 
+      <main className="max-w-layout mx-auto p-6">
+        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-120px)] transition-all duration-500 ${leftPanelOpen
+            ? 'lg:grid-cols-[1fr_40%_1fr]'
             : 'lg:grid-cols-[auto_40%_1fr]'
-        }`}>
+          }`}>
           {/* Left Panel - Feedback Source */}
           <AnimatePresence initial={false}>
             {leftPanelOpen ? (
@@ -237,7 +236,7 @@ export default function Dashboard() {
                 <div className="px-3 pt-3">
                   <FeedbackFilters feedback={allFeedback} onFilteredChange={handleFilteredChange} />
                 </div>
-                <ScrollArea className="h-[520px] p-3">
+                <ScrollArea className="h-dashboard-scroll p-3">
                   {isLoading ? (
                     <FeedbackListSkeleton />
                   ) : sortedFeedback.length === 0 ? (

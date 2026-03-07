@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// Professional Build Config (No Lovable Mentions)
 export default defineConfig(() => ({
   server: {
     host: "::",

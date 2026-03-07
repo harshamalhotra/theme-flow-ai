@@ -108,7 +108,7 @@ export function DraftSummary({ summary }: DraftSummaryProps) {
           <div className="h-12 w-12 rounded-xl bg-accent flex items-center justify-center mb-3">
             <FileText size={20} className="text-accent-foreground" />
           </div>
-          <p className="text-sm text-muted-foreground mb-4 max-w-[200px]">
+          <p className="text-sm text-muted-foreground mb-4 max-w-draft-summary">
             Generate an executive summary from all analyzed feedback
           </p>
           <Button onClick={handleGenerate} size="sm">

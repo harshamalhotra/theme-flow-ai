@@ -16,6 +16,20 @@ export default {
       fontFamily: {
         sans: ["'DM Sans'", "system-ui", "-apple-system", "sans-serif"],
       },
+      maxWidth: {
+        "layout": "1600px",
+        "draft-summary": "200px",
+      },
+      minWidth: {
+        "menu": "8rem",
+        "menu-lg": "12rem",
+      },
+      minHeight: {
+        "textarea": "80px",
+      },
+      height: {
+        "dashboard-scroll": "600px",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
