@@ -273,6 +273,58 @@ export function SentimentHeatmap({ feedback }: SentimentHeatmapProps) {
           <span>Positive</span>
         </div>
       </div>
+      {/* Trend Summary */}
+      {stats.totalDays >= 2 && (
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="rounded-lg border bg-muted/30 p-3 space-y-2"
+        >
+          <div className="flex items-start gap-2">
+            {stats.trendDelta > 5 ? (
+              <TrendingUp size={14} className="text-sentiment-positive mt-0.5 shrink-0" />
+            ) : stats.trendDelta < -5 ? (
+              <TrendingDown size={14} className="text-sentiment-negative mt-0.5 shrink-0" />
+            ) : (
+              <Minus size={14} className="text-sentiment-neutral mt-0.5 shrink-0" />
+            )}
+            <p className="text-xs text-foreground leading-relaxed">
+              {stats.trendDelta > 5
+                ? `Sentiment improved by ${stats.trendDelta} pts in recent weeks (${stats.olderAvg > 0 ? "+" : ""}${stats.olderAvg} → ${stats.recentAvg > 0 ? "+" : ""}${stats.recentAvg}).`
+                : stats.trendDelta < -5
+                ? `Sentiment declined by ${Math.abs(stats.trendDelta)} pts in recent weeks (${stats.olderAvg > 0 ? "+" : ""}${stats.olderAvg} → ${stats.recentAvg > 0 ? "+" : ""}${stats.recentAvg}).`
+                : `Sentiment is stable around ${stats.avgSentiment > 0 ? "+" : ""}${stats.avgSentiment} over ${stats.totalDays} days.`}
+            </p>
+          </div>
+          <div className="space-y-1.5 pl-1">
+            {stats.bestDay && stats.worstDay && Math.abs(stats.bestDay.sentiment! - stats.worstDay.sentiment!) > 30 && (
+              <div className="flex items-start gap-2">
+                <Lightbulb size={11} className="text-primary mt-0.5 shrink-0" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Widest range: best day at {stats.bestDay.sentiment! > 0 ? "+" : ""}{stats.bestDay.sentiment} ({new Date(stats.bestDay.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}) vs worst at {stats.worstDay.sentiment! > 0 ? "+" : ""}{stats.worstDay.sentiment} ({new Date(stats.worstDay.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}).
+                </p>
+              </div>
+            )}
+            {stats.currentStreak >= 2 && stats.streakType && (
+              <div className="flex items-start gap-2">
+                <Lightbulb size={11} className="text-primary mt-0.5 shrink-0" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Current streak: {stats.currentStreak} consecutive {stats.streakType} days.
+                </p>
+              </div>
+            )}
+            {stats.positiveDays > 0 && stats.negativeDays > 0 && (
+              <div className="flex items-start gap-2">
+                <Lightbulb size={11} className="text-primary mt-0.5 shrink-0" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  {stats.positiveDays} positive vs {stats.negativeDays} negative days — {stats.positiveDays > stats.negativeDays ? "sentiment skews positive overall" : stats.negativeDays > stats.positiveDays ? "more negative days suggest persistent issues" : "evenly split, indicating polarized feedback"}.
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
