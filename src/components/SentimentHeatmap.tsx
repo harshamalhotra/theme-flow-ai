@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Feedback } from "@/data/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { TrendingUp, TrendingDown, Minus, Lightbulb } from "lucide-react";
 
 interface SentimentHeatmapProps {
   feedback: Feedback[];
