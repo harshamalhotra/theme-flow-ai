@@ -92,6 +92,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [activeSourceFilter, setActiveSourceFilter] = useState<string | null>(null);
+  const [activePivot, setActivePivot] = useState<"themes" | "negative" | null>(null);
 
   const fetchFeedback = useCallback(async () => {
     setIsLoading(true);
