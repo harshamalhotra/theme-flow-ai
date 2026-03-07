@@ -101,10 +101,45 @@ export function SentimentHeatmap({ feedback }: SentimentHeatmapProps) {
       ? Math.round(activeDays.reduce((s, d) => s + d.sentiment!, 0) / activeDays.length)
       : 0;
 
+    // Trend analysis
+    const sortedActive = [...activeDays].sort((a, b) => a.date.localeCompare(b.date));
+    const recentHalf = sortedActive.slice(Math.floor(sortedActive.length / 2));
+    const olderHalf = sortedActive.slice(0, Math.floor(sortedActive.length / 2));
+    const recentAvg = recentHalf.length
+      ? Math.round(recentHalf.reduce((s, d) => s + d.sentiment!, 0) / recentHalf.length)
+      : 0;
+    const olderAvg = olderHalf.length
+      ? Math.round(olderHalf.reduce((s, d) => s + d.sentiment!, 0) / olderHalf.length)
+      : 0;
+    const trendDelta = recentAvg - olderAvg;
+
+    const worstDay = activeDays.length
+      ? activeDays.reduce((min, d) => (d.sentiment! < min.sentiment! ? d : min), activeDays[0])
+      : null;
+    const bestDay = activeDays.length
+      ? activeDays.reduce((max, d) => (d.sentiment! > max.sentiment! ? d : max), activeDays[0])
+      : null;
+
+    // Streaks
+    let currentStreak = 0;
+    let streakType: "positive" | "negative" | null = null;
+    for (let i = sortedActive.length - 1; i >= 0; i--) {
+      const s = sortedActive[i].sentiment!;
+      const type = s > 15 ? "positive" : s < -15 ? "negative" : null;
+      if (i === sortedActive.length - 1) {
+        if (type) { streakType = type; currentStreak = 1; } else break;
+      } else if (type === streakType) {
+        currentStreak++;
+      } else break;
+    }
+
     return {
       grid: days,
       monthLabels: months,
-      stats: { positiveDays, negativeDays, totalDays: activeDays.length, avgSentiment },
+      stats: {
+        positiveDays, negativeDays, totalDays: activeDays.length, avgSentiment,
+        trendDelta, recentAvg, olderAvg, worstDay, bestDay, currentStreak, streakType,
+      },
     };
   }, [feedback]);
 
