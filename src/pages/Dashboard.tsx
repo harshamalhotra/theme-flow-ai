@@ -333,7 +333,7 @@ export default function Dashboard() {
             {/* Sentiment Trend — Sparkline + Heatmap toggle */}
             <SentimentTrendPanel isLoading={isLoading} feedback={activeFeedback} />
 
-            {/* Stats Row */}
+            {/* Stats Row — Clickable Pivots */}
             <div className="grid grid-cols-3 gap-3">
               {isLoading ? (
                 <>
@@ -343,15 +343,21 @@ export default function Dashboard() {
                 </>
               ) : (
                 [{
-                  label: "Themes Found", value: mockThemes.length, suffix: "",
+                  label: "Themes Found" as const, value: mockThemes.length, suffix: "", pivot: "themes" as const,
                 }, {
-                  label: "Avg. Confidence", value: Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length), suffix: "%",
+                  label: "Avg. Confidence" as const, value: Math.round(mockThemes.reduce((s, t) => s + t.confidence, 0) / mockThemes.length), suffix: "%", pivot: null,
                 }, {
-                  label: "Negative Signals", value: activeFeedback.filter(f => f.sentiment < -0.2).length, suffix: "",
+                  label: "Negative Signals" as const, value: activeFeedback.filter(f => f.sentiment < -0.2).length, suffix: "", pivot: "negative" as const,
                 }].map((stat) => (
-                  <div
+                  <button
                     key={stat.label}
-                    className="rounded-xl border bg-card p-4 text-center"
+                    onClick={() => stat.pivot && setActivePivot(activePivot === stat.pivot ? null : stat.pivot)}
+                    className={cn(
+                      "rounded-xl border bg-card p-4 text-center transition-all",
+                      stat.pivot && "cursor-pointer hover:border-primary/40 hover:shadow-sm",
+                      !stat.pivot && "cursor-default",
+                      activePivot === stat.pivot && stat.pivot && "border-primary ring-1 ring-primary/20 bg-accent/30"
+                    )}
                   >
                     <p className="text-2xl font-semibold text-foreground">
                       <AnimatedCounter value={stat.value} suffix={stat.suffix} />
@@ -359,10 +365,84 @@ export default function Dashboard() {
                     <p className="text-xs text-muted-foreground mt-1">
                       {stat.label}
                     </p>
-                  </div>
+                  </button>
                 ))
               )}
             </div>
+
+            {/* Pivot Detail Panel */}
+            <AnimatePresence>
+              {activePivot === "themes" && (
+                <motion.div
+                  key="pivot-themes"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="rounded-xl border bg-card p-4 overflow-hidden"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      All Themes ({mockThemes.length})
+                    </h3>
+                    <button onClick={() => setActivePivot(null)} className="text-[10px] text-primary hover:underline">
+                      Close
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {mockThemes.map((theme) => (
+                      <button
+                        key={theme.id}
+                        onClick={() => { setActiveTheme(theme.id); setActivePivot(null); }}
+                        className="flex items-center gap-3 w-full rounded-lg border bg-surface-sunken p-3 hover:border-primary/30 transition-colors text-left"
+                      >
+                        <span className={cn(
+                          "h-2 w-2 rounded-full shrink-0",
+                          theme.sentiment > 0.2 ? "bg-sentiment-positive" : theme.sentiment < -0.2 ? "bg-sentiment-negative" : "bg-sentiment-neutral"
+                        )} />
+                        <span className="text-xs font-medium text-foreground flex-1">{theme.label}</span>
+                        <span className="text-[10px] text-muted-foreground">{theme.count} mentions</span>
+                        <span className="text-[10px] text-muted-foreground">{theme.confidence}%</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+              {activePivot === "negative" && (
+                <motion.div
+                  key="pivot-negative"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="rounded-xl border bg-card p-4 overflow-hidden"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Negative Signals ({activeFeedback.filter(f => f.sentiment < -0.2).length})
+                    </h3>
+                    <button onClick={() => setActivePivot(null)} className="text-[10px] text-primary hover:underline">
+                      Close
+                    </button>
+                  </div>
+                  <ScrollArea className="max-h-[240px]">
+                    <div className="space-y-2">
+                      {activeFeedback.filter(f => f.sentiment < -0.2).sort((a, b) => a.sentiment - b.sentiment).map((fb) => (
+                        <div key={fb.id} className="rounded-lg border bg-surface-sunken p-3">
+                          <p className="text-xs text-card-foreground leading-relaxed">"{fb.text}"</p>
+                          <div className="mt-2 flex items-center justify-between">
+                            <span className="text-[10px] text-muted-foreground">{fb.source} · {fb.date}</span>
+                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-sentiment-negative/15 text-sentiment-negative">
+                              {(fb.sentiment * 100).toFixed(0)}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Source Channel Breakdown */}
             <div className="rounded-xl border bg-card p-5">
